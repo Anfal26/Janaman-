@@ -72,9 +72,9 @@
         /* Slide Core Layout */
         .slide-container {
             position: relative;
-            width: 90%;
+            width: 95%;
             max-width: 800px;
-            height: 80vh;
+            height: 85vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -127,11 +127,12 @@
 
         .hint {
             position: absolute;
-            bottom: 20px;
+            bottom: 10px;
             font-size: 0.9rem;
             color: rgba(255, 179, 193, 0.5);
             letter-spacing: 2px;
             animation: pulse 2s infinite;
+            z-index: 10;
         }
 
         @keyframes pulse {
@@ -139,34 +140,38 @@
             50% { opacity: 0.8; }
         }
 
-        /* Slide 4: Credits/Scroll Setup */
+        /* Slide 4: FIXED Credits/Scroll Container Setup */
         .credits-container {
             width: 100%;
             height: 100%;
             overflow: hidden;
             position: relative;
-            mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+            /* Creates a beautiful romantic fade at the top and bottom of the container */
+            mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
         }
 
         .credits-scroll {
             position: absolute;
             width: 100%;
-            top: 100%;
             left: 0;
-            padding: 0 30px;
+            padding: 0 20px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            /* Starts hidden below the slide window */
+            transform: translateY(85vh); 
         }
 
-        /* Class triggered when Slide 4 goes live */
+        /* FIXED: Triggered when Slide 4 goes active. Scrolls the list perfectly up to its exact end (-100%) */
         .active .credits-scroll {
-            animation: scrollUp 45s linear forwards;
+            animation: scrollUpAllReasons 75s linear forwards;
         }
 
         .reason-item {
             font-size: 1.4rem;
             line-height: 1.8;
-            margin-bottom: 25px;
             color: #fff2f4;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
@@ -177,9 +182,14 @@
             margin-right: 8px;
         }
 
-        @keyframes scrollUp {
-            0% { top: 90%; }
-            100% { top: -240%; } /* Adjust if needed so it clears the screen beautifully */
+        /* FIXED ANIMATION: Translates based on the total calculated height of the list container */
+        @keyframes scrollUpAllReasons {
+            0% {
+                transform: translateY(80vh);
+            }
+            100% {
+                transform: translateY(-100%);
+            }
         }
     </style>
 </head>
@@ -208,18 +218,19 @@
             <div class="hint">Tap for the truth ❤️</div>
         </div>
 
-        <!-- Slide 4: Scrolling Text from 1000031222.jpg -->
+        <!-- Slide 4: Scrolling Text (Completely Fixed!) -->
         <div class="slide">
             <div class="credits-container">
                 <div class="credits-scroll" id="reasonsList">
-                    <!-- Reasons will be injected dynamically via JS below -->
+                    <!-- Reasons dynamically injected here via JS -->
                 </div>
             </div>
+            <div class="hint" style="bottom: -15px; font-size: 0.75rem;">Tap to replay ❤️</div>
         </div>
     </div>
 
     <script>
-        // Data parsed and fully transcribed from the image 1000031222.jpg
+        // Your beautifully updated custom list of 98 reasons
         const reasons = [
             "Your smile brightens my day.", "You always know how to make me laugh.", "Your kindness inspires me.", 
             "You listen to me with genuine interest.", "You support my dreams.", "You have the most beautiful eyes.", 
@@ -232,28 +243,28 @@
             "You're always up for trying new things.", "Your optimism is contagious.", "You're incredibly hardworking.", 
             "Your loyalty.", "You make me feel appreciated.", "Your laugh is infectious.", 
             "You make me a better person.", "Your sense of adventure.", "You're always there when I need you.", 
-            "Your passion for life.", "your love for me, and especially jealousy.", "You're an amazing listener.", 
-            "Your generosity.", "You respect me.", "You're honest with me.", "You're way to listen my romantic scenes.", 
+            "Your passion for life.", "Your love for me, and especially jealousy.", "You're an amazing listener.", 
+            "Your generosity.", "You respect me.", "You're honest with me.", "Your way to listen my romantic scenes.", 
             "You make me feel cherished.", "Your kisses are magical.", "You're my favorite person.", 
-            "Your resilience.", "You're dirty mind.", "Your strength.", "You make me feel alive.", 
+            "Your resilience.", "Your dirty mind.", "Your strength.", "You make me feel alive.", 
             "Your dedication to our relationship.", "You're always honest with me.", "Your warm heart.", 
             "You make everyday brighter.", "Your voice msg of today.", "You're my soulmate.", "Your sense of adventure.", 
             "You always have the best ideas.", "You're my inspiration.", "Your selflessness.", 
             "You understand me.", "Your talks about others.", "Your positive attitude.", "You're so caring.", 
             "You're my comfort.", "Your smile is contagious.", "You're my partner in everything.", 
-            "Your laugh makes me happy.", "You're my hamsafar.", "Your are my madam jiiiii forever.", "You make me feel loved.", 
+            "Your laugh makes me happy.", "You're my hamsafar.", "You are my madam jiiiii forever.", "You make me feel loved.", 
             "You're incredibly thoughtful.", "You always make time for me.", "You're my favorite person to talk to.", 
             "You make me feel important.", "Your loyalty means the world to me.", "You're my best friend and lover.", 
             "You're my constant support.", "Your warmth.", "You make me feel understood.", "You're my perfect match.", 
             "Your patience with me.", "You're my biggest fan.", "You make me laugh like no one else.", 
             "Your loving nature.", "You make life fun.", "You're always there for me.", "Your thoughtfulness.", 
             "You make my heart skip a beat.", "You're my everything.", "Your encouragement.", "You're my greatest adventure.", 
-            "You make me feel, i am with you.", "Your tenderness.", "You make me smile.", "Your dedication to us.", 
+            "You make me feel, I am with you.", "Your tenderness.", "You make me smile.", "Your dedication to us.", 
             "You're my forever.", "You make life worth living.", "You're my reason to smile.", "You make me feel complete.", 
             "Your love is my strength.", "You're my one and only true love."
         ];
 
-        // Inject the transcribed text into the scroll slide
+        // Inject all 98 elements safely into the HTML
         const listContainer = document.getElementById('reasonsList');
         reasons.forEach((reason, index) => {
             const div = document.createElement('div');
@@ -262,26 +273,36 @@
             listContainer.appendChild(div);
         });
 
-        // Setup Interactive Slide Advancing
+        // Setup Slide Navigation
         const slides = document.querySelectorAll('.slide');
         let currentSlide = 0;
 
         document.body.addEventListener('click', () => {
+            slides[currentSlide].classList.remove('active');
+            
             if (currentSlide < slides.length - 1) {
-                slides[currentSlide].classList.remove('active');
                 currentSlide++;
-                slides[currentSlide].classList.add('active');
+            } else {
+                // If they click on the last screen, it resets to the first slide
+                currentSlide = 0;
+                
+                // Force reset the scroll animation so it starts perfectly from the bottom next time
+                const scrollEl = document.querySelector('.credits-scroll');
+                scrollEl.style.animation = 'none';
+                scrollEl.offsetHeight; /* triggers an invisible browser layout refresh */
+                scrollEl.style.animation = null;
             }
+            
+            slides[currentSlide].classList.add('active');
         });
 
-        // Generate Random Floating Background Hearts
+        // Ambient Floating Background Hearts
         const heartsBg = document.getElementById('heartsBg');
-        for (let i = 0; i < 94; i++) {
+        for (let i = 0; i < 35; i++) {
             const heart = document.createElement('div');
             heart.className = 'heart';
             heart.style.left = Math.random() * 100 + '%';
-            heart.style.animationDelay = Math.random() * 8 + 's';
-            // Vary the size of background hearts slightly
+            heart.style.animationDelay = Math.random() * 10 + 's';
             const size = Math.random() * 15 + 15;
             heart.style.width = size + 'px';
             heart.style.height = size + 'px';
